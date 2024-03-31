@@ -1,3 +1,5 @@
+package main;
+
 public class Box {
     private int length;
     private int width;

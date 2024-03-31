@@ -1,9 +1,11 @@
-//import javafx.scene.shape;
+package main;
+
 //X = width, Y = length, Z = height
-public class simpleBox {
+public class SimpleBox {
     public static void main(String[] args){
         Box myBox1 = new Box(3, 3, 3, new Point3D(0, 0, 0));
         Box myBox2 = new Box(3, 3, 3, new Point3D(0, 0, 0));
+        System.out.println(calcBoundingBox(myBox1, myBox2));
 
         System.out.println(myBox1.pointsToString());
         System.out.println(myBox2.pointsToString());
@@ -16,15 +18,16 @@ public class simpleBox {
         Point3D[] aPoints = a.getPointArr();
         Point3D[] bPoints = b.getPointArr();
 
-        int greatestX = Integer.MIN_VALUE;
-        int greatestY = Integer.MIN_VALUE;
-        int greatestZ = Integer.MIN_VALUE;
+        int greatestX = Math.max(aPoints[7].getX(), bPoints[7].getX());
+        int greatestY = Math.max(aPoints[7].getY(), bPoints[7].getY());
+        int greatestZ = Math.max(aPoints[7].getZ(), bPoints[7].getZ());
 
-        int leastX = Integer.MAX_VALUE;
-        int leastY = Integer.MAX_VALUE;
-        int leastZ = Integer.MAX_VALUE;
+        int leastX = Math.min(aPoints[0].getX(), bPoints[0].getX());
+        int leastY = Math.min(aPoints[0].getY(), bPoints[0].getY());
+        int leastZ = Math.min(aPoints[0].getZ(), bPoints[0].getZ());
 
         //loop through each set of points, find the greatest and least x, y, z values
+        /*
         for (Point3D i:aPoints){
             greatestX = Math.max(greatestX, i.getX());
             greatestY = Math.max(greatestY, i.getY());
@@ -44,6 +47,7 @@ public class simpleBox {
             leastY = Math.min(leastY, j.getY());
             leastZ = Math.min(leastZ, j.getZ());
         }
+        */
 
 
         //length, width, height = difference between greatest and least y, x, z respectively
@@ -71,8 +75,6 @@ public class simpleBox {
                 && a.getStartPoint().getY() < greaterYb && b.getStartPoint().getY() < greaterYa && //y values are overlapping
                 a.getStartPoint().getZ() < greaterZb && b.getStartPoint().getZ() < greaterZa); //z values overlapping
     }
-
-
 
 
     //OLD OVERLAP FUNCTION --> DOESN'T WORK
@@ -109,7 +111,7 @@ public class simpleBox {
     */
 
 
-    //actual thing
+    //actually finds the best box
     /*
     private Box findBestBox(Box a, Box b){
         int smallestSA = 0;

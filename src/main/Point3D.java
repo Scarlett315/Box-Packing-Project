@@ -1,3 +1,5 @@
+package main;
+
 public class Point3D {
     private int x;
     private int y;
