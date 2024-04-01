@@ -3,18 +3,21 @@ package main;
 //X = width, Y = length, Z = height
 public class SimpleBox {
     public static void main(String[] args){
-        Box myBox1 = new Box(3, 3, 3, new Point3D(0, 0, 0));
-        Box myBox2 = new Box(3, 3, 3, new Point3D(0, 0, 0));
-        System.out.println(calcBoundingBox(myBox1, myBox2));
+        CalcBox myCalcBox1 = new CalcBox(3, 3, 3, new Point3D(0, 0, 0));
+        CalcBox myCalcBox2 = new CalcBox(5, 12, 13, new Point3D(0, 0, 0));
 
-        System.out.println(myBox1.pointsToString());
-        System.out.println(myBox2.pointsToString());
-        System.out.println(isOverlap(myBox1, myBox2));
+        System.out.println(myCalcBox1.pointsToString());
+        System.out.println(myCalcBox2.pointsToString());
+        System.out.println("The best box is....");
+        System.out.println(findBestBox(myCalcBox1, myCalcBox2)[0].pointsToString());
+        System.out.println(findBestBox(myCalcBox1, myCalcBox2)[0].toString());
+        System.out.println("Points of first box: \n" + findBestBox(myCalcBox1, myCalcBox2)[1].pointsToString());
+        System.out.println("Points of second box: \n" + findBestBox(myCalcBox1, myCalcBox2)[2].pointsToString());
     }
 
 
     //Calculates a bounding box for any two Boxes
-    private static Box calcBoundingBox(Box a, Box b){
+    private static CalcBox calcBoundingBox(CalcBox a, CalcBox b){
         Point3D[] aPoints = a.getPointArr();
         Point3D[] bPoints = b.getPointArr();
 
@@ -26,42 +29,18 @@ public class SimpleBox {
         int leastY = Math.min(aPoints[0].getY(), bPoints[0].getY());
         int leastZ = Math.min(aPoints[0].getZ(), bPoints[0].getZ());
 
-        //loop through each set of points, find the greatest and least x, y, z values
-        /*
-        for (Point3D i:aPoints){
-            greatestX = Math.max(greatestX, i.getX());
-            greatestY = Math.max(greatestY, i.getY());
-            greatestZ = Math.max(greatestZ, i.getZ());
-
-            leastX = Math.min(leastX, i.getX());
-            leastY = Math.min(leastY, i.getY());
-            leastZ = Math.min(leastZ, i.getZ());
-        }
-
-        for (Point3D j:bPoints){ //same thing for box b points
-            greatestX = Math.max(greatestX, j.getX());
-            greatestY = Math.max(greatestY, j.getY());
-            greatestZ = Math.max(greatestZ, j.getZ());
-
-            leastX = Math.min(leastX, j.getX());
-            leastY = Math.min(leastY, j.getY());
-            leastZ = Math.min(leastZ, j.getZ());
-        }
-        */
-
-
         //length, width, height = difference between greatest and least y, x, z respectively
         Point3D start = new Point3D(leastX, leastY, leastZ); //start point = least x, y, z coordinate (bottom left)
         int l = greatestY - leastY;
         int w = greatestX - leastX;
         int h = greatestZ - leastZ;
 
-        return new Box(l, w, h, start);
+        return new CalcBox(l, w, h, start);
     }
 
     //checks if 2 boxes are overlapping
-    private static boolean isOverlap(Box a, Box b) {
-        //other end? of the point coming from startPoint of each box
+    private static boolean isOverlap(CalcBox a, CalcBox b) {
+        //coordinates of the top right corner (greatest x, y, z values of each box)
         int greaterXa = a.getStartPoint().getX() + a.getWidth();
         int greaterYa = a.getStartPoint().getY() + a.getLength();
         int greaterZa = a.getStartPoint().getZ() + a.getHeight();
@@ -71,68 +50,51 @@ public class SimpleBox {
         int greaterZb = b.getStartPoint().getZ() + b.getHeight();
 
         //all 3 have to be true for there to be overlap
-        return (a.getStartPoint().getX() < greaterXb && b.getStartPoint().getX() < greaterXa //x values are overlapping
-                && a.getStartPoint().getY() < greaterYb && b.getStartPoint().getY() < greaterYa && //y values are overlapping
-                a.getStartPoint().getZ() < greaterZb && b.getStartPoint().getZ() < greaterZa); //z values overlapping
+        return (a.getStartPoint().getX() <= greaterXb && b.getStartPoint().getX() <= greaterXa //x values are overlapping
+                && a.getStartPoint().getY() <= greaterYb && b.getStartPoint().getY() <= greaterYa && //y values are overlapping
+                a.getStartPoint().getZ() <= greaterZb && b.getStartPoint().getZ() <= greaterZa); //z values overlapping
     }
 
 
-    //OLD OVERLAP FUNCTION --> DOESN'T WORK
-    /*
-    private static boolean isOverlap(Box a, Box b){
-        int strikes = 0; //2 dimensions must be overlapping for the boxes to be overlapping
-        Point3D[] aPoints = a.getPointArr();
 
-
-        //the other end of each line from startPoint
-        int greaterX = b.getStartPoint().getX() + b.getWidth();
-        int greaterY = b.getStartPoint().getY() + b.getLength();
-        int greaterZ = b.getStartPoint().getZ() + b.getHeight();
-
-        //checks each point for overlap
-        for (Point3D i:aPoints) {
-            strikes = 0;
-            if (i.getX() < greaterX && i.getX() > b.getStartPoint().getX()) {
-                strikes++;
-                if (i.getY() < greaterY && i.getY() > b.getStartPoint().getY()) {
-                    strikes++;
-                    if(i.getZ() < greaterZ && i.getZ() > b.getStartPoint().getZ()){
-                        strikes++;
-                    }
-                }
-            }
-
-            if (strikes >= 2){ //2 strikes and you're out :D
-                return true;
-            }
-        }
-        return false;
-    }
-    */
-
-
-    //actually finds the best box
-    /*
-    private Box findBestBox(Box a, Box b){
-        int smallestSA = 0;
+    //finds the best box using a greedy algorithm! :D
+    private static CalcBox[] findBestBox(CalcBox a, CalcBox b){
+        int smallestSA = Integer.MAX_VALUE;
+        CalcBox bestBox = new CalcBox();
+        CalcBox aPos = a; //positioning of a changes(b doesn't move so it doesn't matter)
 
         //make 3 orientations of one of the boxes (the other one doesn't matter because symmetry)
-        Box a2 = new Box(a.getWidth(), a.getHeight(), a.getLength(), a.getStartPoint());
-        Box a3 = new Box(a.getHeight(), a.getLength(), a.getWidth(), a.getStartPoint());
+        CalcBox a2 = new CalcBox(a.getWidth(), a.getHeight(), a.getLength(), a.getStartPoint());
+        CalcBox a3 = new CalcBox(a.getHeight(), a.getLength(), a.getWidth(), a.getStartPoint());
         Point3D originalStart = a.getStartPoint();
 
         //calculate the bounding box of each alignment
         for (int i = 0; i < 8; i++){ //point on 1st box
             Point3D currentPointB = b.getPointArr()[i];
-
             for (int j = 0; j < 8; j++){ //point on 2nd box
+                a.moveBox(j, b.getPointArr()[i]);
 
+                //if the boxes are not overlapping & the surface area is smaller than the current smallest value
+                if (!isOverlap(a, b) && calcBoundingBox(a, b).calculateSA() < smallestSA){
+                    bestBox = calcBoundingBox(a, b);
+                    aPos = a;
+                }
+
+                a2.moveBox(j, b.getPointArr()[i]);
+                if (!isOverlap(a2, b) && calcBoundingBox(a2, b).calculateSA() < smallestSA){
+                    bestBox = calcBoundingBox(a2, b);
+                    aPos = a2;
+                }
+
+                a3.moveBox(j, b.getPointArr()[i]);
+                if (!isOverlap(a3, b) && calcBoundingBox(a3, b).calculateSA() < smallestSA){
+                    bestBox = calcBoundingBox(a3, b);
+                    aPos = a3;
+                }
             }
         }
-
-
-        //return best
+        return new CalcBox[]{bestBox, aPos, b};
     }
 
-     */
+
 }
