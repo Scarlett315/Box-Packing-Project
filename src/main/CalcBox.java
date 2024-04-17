@@ -18,6 +18,14 @@ public class CalcBox {
     }
     public CalcBox(){};
 
+    public CalcBox(CalcBox box){
+        length = box.getLength();
+        width = box.getWidth();
+        height = box.getHeight();
+        startPoint = box.getStartPoint();
+        pointArr = calculateBoxPoints(startPoint, length, width, height);
+    }
+
     //outputs the point array in a more readable way
     public String pointsToString(){
         String out = "";
@@ -31,7 +39,8 @@ public class CalcBox {
 
     @Override
     public String toString(){
-        return "Length: " + length + ", Width: " + width + ", Height" + height + ", Bottom left corner" + startPoint.toString();
+        return "Length: " + length + ", Width: " + width + ", Height: " + height + ", Bottom left corner: " + startPoint.toString()
+                + "\n   Surface Area: " + this.calculateSA() + "\n  Volume: "+ this.calculateVolume() + "\n";
     }
 
 
@@ -74,39 +83,35 @@ public class CalcBox {
         //calculates & sets start point relative to each point; there was probably a better way to do this
         if (pointIndex == 0){
             startPoint = targetPoint;
-            pointArr = calculateBoxPoints(targetPoint, length, width, height);
         }
         else if (pointIndex == 1){
             startPoint = new Point3D(targetPoint.getX()-width, targetPoint.getY(),targetPoint.getZ());
-            pointArr = calculateBoxPoints(startPoint, length, width, height);
         }
         else if (pointIndex == 2){
             startPoint = new Point3D(targetPoint.getX(), targetPoint.getY()-length,targetPoint.getZ());
-            pointArr = calculateBoxPoints(startPoint, length, width, height);
         }
         else if (pointIndex == 3){
             startPoint = new Point3D(targetPoint.getX() - width, targetPoint.getY() - length,targetPoint.getZ());
-            pointArr = calculateBoxPoints(startPoint, length, width, height);
         }
         else if (pointIndex == 4){
             startPoint = new Point3D(targetPoint.getX(), targetPoint.getY(),targetPoint.getZ() - height);
-            pointArr = calculateBoxPoints(startPoint, length, width, height);
         }
         else if (pointIndex == 5){
             startPoint = new Point3D(targetPoint.getX() - width, targetPoint.getY(),targetPoint.getZ() - height);
-            pointArr = calculateBoxPoints(startPoint, length, width, height);
         }
         else if (pointIndex == 6){
             startPoint = new Point3D(targetPoint.getX(), targetPoint.getY() - length,targetPoint.getZ() - height);
-            pointArr = calculateBoxPoints(startPoint, length, width, height);
         }
         else if (pointIndex == 7){
             startPoint = new Point3D(targetPoint.getX()-width, targetPoint.getY() - length,targetPoint.getZ() - height);
-            pointArr = calculateBoxPoints(startPoint, length, width, height);
         }
-
+        pointArr = calculateBoxPoints(startPoint, length, width, height);
     }
 
+    //checks if 2 boxes are equal (length, width, height, startPoint are the same)
+    public boolean equals(CalcBox otherBox){
+        return length == otherBox.getLength() && height == otherBox.getHeight() && width == otherBox.getWidth() && startPoint == otherBox.getStartPoint();
+    }
 
     //Getters & Setters!
     public int getHeight() {

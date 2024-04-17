@@ -1,19 +1,33 @@
 package main;
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.shape.Box;
-import javafx.scene.transform.Rotate;
+import javafx.scene.shape.CullFace;
 import javafx.scene.transform.Translate;
-import javafx.stage.Stage;
+import javafx.scene.shape.DrawMode;
 
+public class displayBox{
+    private Box box = new Box();
+    public displayBox(CalcBox initBox) {
+        box.setWidth(initBox.getWidth());
+        box.setHeight(initBox.getHeight());
+        box.setDepth(initBox.getLength());
+        box.setDrawMode(DrawMode.LINE);
 
-public class displayBox extends CalcBox{
-    public displayBox(int initL, int initW, int initH, Point3D initS) {
-        super(initL, initW, initH, initS);
+        Translate translate = new Translate();
+
+        // adding 0.5 * l/w/h to each translation because javafx moves based on center point
+        translate.setX(initBox.getStartPoint().getX() + initBox.getWidth() * 0.5);
+        translate.setY(-initBox.getStartPoint().getZ() - initBox.getHeight()* 0.5);
+        translate.setZ(initBox.getStartPoint().getY() + initBox.getLength() * 0.5);
+
+        box.getTransforms().addAll(translate);
     }
 
+    public Box getBox() {
+        return box;
+    }
 
-
+    public void setBox(Box box) {
+        this.box = box;
+    }
 }
 
