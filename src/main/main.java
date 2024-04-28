@@ -3,13 +3,11 @@ import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
 //X = width, Y = length, Z = height
-public class SimpleBox extends Application{
+public class main extends Application{
     @Override
     public void start(Stage stage) {
         //Colors
@@ -22,40 +20,47 @@ public class SimpleBox extends Application{
         PhongMaterial black = new PhongMaterial();
         black.setDiffuseColor(Color.BLACK);
 
+        PhongMaterial green = new PhongMaterial();
+        green.setDiffuseColor(Color.GREEN);
+
+        PhongMaterial[] colors = new PhongMaterial[]{black, red, blue, green};
+
         //Calculations
-        CalcBox myCalcBox1 = new CalcBox(8, 3, 3, new Point3D(0, 0, 0));
-        CalcBox myCalcBox2 = new CalcBox(5, 12, 13, new Point3D(0, 0, 0));
-        //myCalcBox1.moveBox(0, myCalcBox2.getPointArr()[4]);
-        CalcBox bounding = new TwoBoxes(myCalcBox1, myCalcBox2).calcBoundingBox();
-        TwoBoxes test = new TwoBoxes(myCalcBox1, myCalcBox2);
+        CalcBox myCalcBox1 = new CalcBox(3, 3, 3, new Point3D(0, 0, 0));
+        CalcBox myCalcBox2 = new CalcBox(6, 6, 6, new Point3D(-4, 4, 3));
+        CalcBox myCalcBox3 = new CalcBox(2, 2, 2, new Point3D(-10, 2, -0));
+        BoxArray myBoxArray = new BoxArray(new CalcBox[]{myCalcBox1, myCalcBox2, myCalcBox3});
+
+        CalcBox[] best = myBoxArray.findBestBox();
 
         /*
-        Box display1 = new displayBox(myCalcBox1).getBox();
+        Box display1 = new displayBox(myCalcBox1).getBox(); //a
         display1.setMaterial(blue);
-        Box display2 = new displayBox(myCalcBox2).getBox();
+        Box display2 = new displayBox(myCalcBox2).getBox(); //b
         display2.setMaterial(red);
-        Box display3 = new displayBox(bounding).getBox();
-        display3.setMaterial(black);
-        System.out.println(bounding.toString());
-        System.out.println(myCalcBox1.toString());
-        System.out.println(myCalcBox2.toString());
+        Box display3 = new displayBox(myCalcBox3).getBox(); //c
+        display3.setMaterial(green);
+        Box display4 = new displayBox(myBoxArray.calcBoundingBox()).getBox(); //bounding
+        display4.setMaterial(black);
          */
 
+        Box bestBox = new DisplayBox(best[0]).getBox();
+        bestBox.setMaterial(colors[0]);
+        Box a = new DisplayBox(best[1]).getBox();
+        a.setMaterial(colors[1]);
+        Box b = new DisplayBox(best[2]).getBox();
+        b.setMaterial(colors[2]);
+        Box c = new DisplayBox(best[3]).getBox();
+        c.setMaterial(colors[3]);
 
-        CalcBox[] best = test.findBestBox();
-        Box display1 = new displayBox(best[1]).getBox(); //a
-        display1.setMaterial(blue);
-        Box display2 = new displayBox(best[2]).getBox(); //b
-        display2.setMaterial(red);
-        Box display3 = new displayBox(best[0]).getBox(); //bounding
-        display3.setMaterial(black);
+
 
         //Lighting
         AmbientLight light = new AmbientLight(Color.WHITE);
 
 
         //Creating a Group object
-        Group root = new Group(light, display1, display2, display3);
+        Group root = new Group(light, bestBox, a, b, c);
 
         //Creating a scene object
         Scene scene = new Scene(root, 800, 800);

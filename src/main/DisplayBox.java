@@ -1,12 +1,11 @@
 package main;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.CullFace;
 import javafx.scene.transform.Translate;
 import javafx.scene.shape.DrawMode;
 
-public class displayBox{
+public class DisplayBox{
     private Box box = new Box();
-    public displayBox(CalcBox initBox) {
+    public DisplayBox(CalcBox initBox) {
         box.setWidth(initBox.getWidth());
         box.setHeight(initBox.getHeight());
         box.setDepth(initBox.getLength());

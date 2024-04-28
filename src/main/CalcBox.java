@@ -40,7 +40,7 @@ public class CalcBox {
     @Override
     public String toString(){
         return "Length: " + length + ", Width: " + width + ", Height: " + height + ", Bottom left corner: " + startPoint.toString()
-                + "\n   Surface Area: " + this.calculateSA() + "\n  Volume: "+ this.calculateVolume() + "\n";
+                + "\n   Surface Area: " + this.calculateSA() + "\n   Volume: "+ this.calculateVolume() + "\n";
     }
 
 
@@ -112,6 +112,25 @@ public class CalcBox {
     public boolean equals(CalcBox otherBox){
         return length == otherBox.getLength() && height == otherBox.getHeight() && width == otherBox.getWidth() && startPoint == otherBox.getStartPoint();
     }
+
+    //checks if 2 boxes are overlapping (in space)
+    public boolean isOverlap(CalcBox b) {
+        if (this.equals(b)){ //I think the check would return false if they are literally the same box (because it's > not >=)
+            return true;
+        }
+
+        //coordinates of the top right corner (greatest x, y, z values of each box)
+        Point3D farthestA = this.getPointArr()[7];
+        Point3D farthestB = b.getPointArr()[7];
+
+        //check for overlap in all dimensions
+        boolean xOverlap = (this.getStartPoint().getX() < farthestB.getX()) && (farthestA.getX() > b.getStartPoint().getX());
+        boolean yOverlap = (this.getStartPoint().getY() < farthestB.getY()) && (farthestA.getY() > b.getStartPoint().getY());
+        boolean zOverlap = (this.getStartPoint().getZ() < farthestB.getZ()) && (farthestA.getZ() > b.getStartPoint().getZ());
+
+        return xOverlap && yOverlap && zOverlap;
+    }
+
 
     //Getters & Setters!
     public int getHeight() {
