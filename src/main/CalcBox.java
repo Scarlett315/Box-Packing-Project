@@ -121,7 +121,7 @@ public class CalcBox {
 
         //coordinates of the top right corner (greatest x, y, z values of each box)
         Point3D farthestA = this.getPointArr()[7];
-        Point3D farthestB = b.getPointArr()[7];
+        Point3D farthestB = this.getPointArr()[7];
 
         //check for overlap in all dimensions
         boolean xOverlap = (this.getStartPoint().getX() < farthestB.getX()) && (farthestA.getX() > b.getStartPoint().getX());

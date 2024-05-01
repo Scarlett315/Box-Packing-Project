@@ -12,37 +12,30 @@ public class main extends Application{
     public void start(Stage stage) {
         //Colors
         PhongMaterial blue = new PhongMaterial();
-        blue.setDiffuseColor(Color.BLUE); // Set diffuse color (the main color of the object)
+        blue.setDiffuseColor(Color.BLUE);
 
         PhongMaterial red = new PhongMaterial();
         red.setDiffuseColor(Color.RED);
 
-        PhongMaterial black = new PhongMaterial();
-        black.setDiffuseColor(Color.BLACK);
-
         PhongMaterial green = new PhongMaterial();
         green.setDiffuseColor(Color.GREEN);
 
-        PhongMaterial[] colors = new PhongMaterial[]{black, red, blue, green};
+        PhongMaterial purple = new PhongMaterial();
+        purple.setDiffuseColor(Color.PURPLE);
+
+        PhongMaterial black = new PhongMaterial();
+        black.setDiffuseColor(Color.BLACK);
+
+        PhongMaterial[] colors = new PhongMaterial[]{black, red, blue, green, purple};
 
         //Calculations
         CalcBox myCalcBox1 = new CalcBox(3, 3, 3, new Point3D(0, 0, 0));
         CalcBox myCalcBox2 = new CalcBox(6, 6, 6, new Point3D(-4, 4, 3));
-        CalcBox myCalcBox3 = new CalcBox(2, 2, 2, new Point3D(-10, 2, -0));
-        BoxArray myBoxArray = new BoxArray(new CalcBox[]{myCalcBox1, myCalcBox2, myCalcBox3});
+        CalcBox myCalcBox3 = new CalcBox(8, 8, 8, new Point3D(-10, 2, -0));
+        CalcBox myCalcBox4 = new CalcBox(5, 5, 5, new Point3D(-10, 2, -0));
+        BoxArray myBoxArray = new BoxArray(new CalcBox[]{myCalcBox1, myCalcBox2, myCalcBox3, myCalcBox4});
 
         CalcBox[] best = myBoxArray.findBestBox();
-
-        /*
-        Box display1 = new displayBox(myCalcBox1).getBox(); //a
-        display1.setMaterial(blue);
-        Box display2 = new displayBox(myCalcBox2).getBox(); //b
-        display2.setMaterial(red);
-        Box display3 = new displayBox(myCalcBox3).getBox(); //c
-        display3.setMaterial(green);
-        Box display4 = new displayBox(myBoxArray.calcBoundingBox()).getBox(); //bounding
-        display4.setMaterial(black);
-         */
 
         Box bestBox = new DisplayBox(best[0]).getBox();
         bestBox.setMaterial(colors[0]);
@@ -52,7 +45,8 @@ public class main extends Application{
         b.setMaterial(colors[2]);
         Box c = new DisplayBox(best[3]).getBox();
         c.setMaterial(colors[3]);
-
+        Box d = new DisplayBox(best[4]).getBox();
+        d.setMaterial(colors[4]);
 
 
         //Lighting
@@ -60,7 +54,7 @@ public class main extends Application{
 
 
         //Creating a Group object
-        Group root = new Group(light, bestBox, a, b, c);
+        Group root = new Group(light, bestBox, a, b, c, d);
 
         //Creating a scene object
         Scene scene = new Scene(root, 800, 800);

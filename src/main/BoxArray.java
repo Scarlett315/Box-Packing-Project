@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class BoxArray {
     private CalcBox[] boxArr;
@@ -51,7 +52,14 @@ public class BoxArray {
         CalcBox bestBox = new CalcBox();
         CalcBox[] finalBoxes = new CalcBox[boxArr.length + 1]; //final array of boxes w/ positions to be returned
 
-        //sort the box list by volume (avoids some problems & looks better)
+        //sort the box list by volume, convert into ArrayList to sort and then back into Array
+        //int[] originalIndices = new int[]{}; //positions of each box in the new array
+        ArrayList<CalcBox> boxArrLi =  new ArrayList<CalcBox>(Arrays.asList(boxArr));
+        boxArrLi.sort(Comparator.comparingInt((CalcBox o) -> o.calculateVolume()));
+        for (int i = 0; i < boxArr.length; i++){
+
+            boxArr[i] = boxArrLi.get(i);
+        }
 
 
         boxArr[0].moveBox(0, new Point3D(0, 0, 0)); //moves first box to origin
@@ -67,16 +75,18 @@ public class BoxArray {
             //make 3 orientations of the box to be placed
             CalcBox[] aOrients = new CalcBox[]{new CalcBox(a), new CalcBox(a.getWidth(), a.getHeight(), a.getLength(), a.getStartPoint()), new CalcBox(a.getHeight(), a.getLength(), a.getWidth(), a.getStartPoint())};
 
+            //box a = box to be placed; box b = the current box that is already placed that a is compared against
             //for each box that has already been placed
             for (CalcBox b:pastBoxes){
                 System.out.println("Current box 'b': " + b.toString());
-                for (CalcBox aOrientation:aOrients){ //for each orientation of the box to be placed
+                for (CalcBox aOrientation:aOrients){ //for each orientation of a/the box to be placed
                     System.out.println("Current 'a' Box Orientation: " + aOrientation.toString());
                     for (int i = 0; i < 8; i++){ //point on a
                         for (int j = 0; j < 8; j++){ //point b
                             aOrientation.moveBox(i, b.getPointArr()[j]); //moves the 'i' point on box a to the 'j' point on box b
                             //System.out.println("'a' has been moved; new box: " + aOrientation.toString());
 
+                            //making a BoxArray with the boxes already placed + the placed box
                             CalcBox[] combined = new CalcBox[pastBoxes.size() + 1];
                             for (int k = 0; k <= combined.length-2; k++) {
                                 //System.out.println("Past box: " + pastBoxes.get(k));
@@ -86,21 +96,21 @@ public class BoxArray {
 
                             BoxArray boxes = new BoxArray(combined);
 
-
-                            //if the boxes are not overlapping & the surface area is smaller than the current smallest value
+                            //makes sure the new box is not overlapping with past boxes
                             boolean overlap = false;
                             for (CalcBox pastBox:pastBoxes){
                                 if (pastBox.isOverlap(aOrientation)){
                                     overlap = true;
                                 }
                             }
-                            System.out.println("Overlapping?: " + overlap + " / SA: " + boxes.calcBoundingBox().calculateSA());
 
+                            System.out.println("Overlapping?: " + overlap + " / SA: " + boxes.calcBoundingBox().calculateSA());
+                            //if the boxes are not overlapping & the surface area is smaller than the current smallest value
                             if (!overlap && boxes.calcBoundingBox().calculateSA() < smallestSA){
-                                smallestSA = boxes.calcBoundingBox().calculateSA();
+                                smallestSA = boxes.calcBoundingBox().calculateSA(); //changes smallestSA
                                 bestBox = new CalcBox(boxes.calcBoundingBox());
-                                System.out.println("Best Box changed: " + bestBox.toString());
-                                bestPosA = new CalcBox(aOrientation);
+                                //System.out.println("Best Box changed: " + bestBox.toString());
+                                bestPosA = new CalcBox(aOrientation); //saves the best orientation of a
                             }
                         }
                     }
