@@ -45,21 +45,21 @@ public class BoxArray {
         return new CalcBox(l, w, h, start);
     }
 
-    //finds the best box! :D
-    public CalcBox[] findBestBox(){
+    //finds the best bounding box for a specific order of placing down the boxes
+    private CalcBox[] findBestPrmtn(){
         int smallestSA;
         ArrayList<CalcBox> pastBoxes = new ArrayList<CalcBox>();
         CalcBox bestBox = new CalcBox();
         CalcBox[] finalBoxes = new CalcBox[boxArr.length + 1]; //final array of boxes w/ positions to be returned
 
-        //sort the box list by volume, convert into ArrayList to sort and then back into Array
-        //int[] originalIndices = new int[]{}; //positions of each box in the new array
+        //sort the box list by volume, convert into ArrayList to sort and then back into Array (intuitive but not correct)
+        /*
         ArrayList<CalcBox> boxArrLi =  new ArrayList<CalcBox>(Arrays.asList(boxArr));
         boxArrLi.sort(Comparator.comparingInt((CalcBox o) -> o.calculateVolume()));
         for (int i = 0; i < boxArr.length; i++){
-
             boxArr[i] = boxArrLi.get(i);
         }
+        */
 
 
         boxArr[0].moveBox(0, new Point3D(0, 0, 0)); //moves first box to origin
@@ -78,9 +78,9 @@ public class BoxArray {
             //box a = box to be placed; box b = the current box that is already placed that a is compared against
             //for each box that has already been placed
             for (CalcBox b:pastBoxes){
-                System.out.println("Current box 'b': " + b.toString());
+                //System.out.println("Current box 'b': " + b.toString());
                 for (CalcBox aOrientation:aOrients){ //for each orientation of a/the box to be placed
-                    System.out.println("Current 'a' Box Orientation: " + aOrientation.toString());
+                    //System.out.println("Current 'a' Box Orientation: " + aOrientation.toString());
                     for (int i = 0; i < 8; i++){ //point on a
                         for (int j = 0; j < 8; j++){ //point b
                             aOrientation.moveBox(i, b.getPointArr()[j]); //moves the 'i' point on box a to the 'j' point on box b
@@ -104,7 +104,7 @@ public class BoxArray {
                                 }
                             }
 
-                            System.out.println("Overlapping?: " + overlap + " / SA: " + boxes.calcBoundingBox().calculateSA());
+                            //System.out.println("Overlapping?: " + overlap + " / SA: " + boxes.calcBoundingBox().calculateSA());
                             //if the boxes are not overlapping & the surface area is smaller than the current smallest value
                             if (!overlap && boxes.calcBoundingBox().calculateSA() < smallestSA){
                                 smallestSA = boxes.calcBoundingBox().calculateSA(); //changes smallestSA
@@ -128,6 +128,31 @@ public class BoxArray {
 
         return finalBoxes; //returns the best box & orientations of all boxes
     }
+
+    //finds the best box! :D
+    public CalcBox[] findBestBox(){
+        Permute permute = new Permute(); //I don't think this is the right way but it works
+        CalcBox[][] allPermutations = permute.getPermutations(boxArr);
+
+        //initial values
+        int smallestSA = Integer.MAX_VALUE;
+        CalcBox[] finBoxes = new CalcBox[boxArr.length + 1];
+
+        for (CalcBox[] permutation:allPermutations){
+            BoxArray arr = new BoxArray(permutation);
+
+            CalcBox[] best = arr.findBestPrmtn();
+            if (best[0].calculateSA() < smallestSA){
+                System.out.println("Best order of boxes changed");
+                smallestSA = best[0].calculateSA();
+                finBoxes = best;
+            }
+        }
+        return finBoxes;
+    }
+
+    //Array functionality
+
 
     //Getters & Setters
     public CalcBox[] getBoxArr() {

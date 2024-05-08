@@ -29,10 +29,10 @@ public class main extends Application{
         PhongMaterial[] colors = new PhongMaterial[]{black, red, blue, green, purple};
 
         //Calculations
-        CalcBox myCalcBox1 = new CalcBox(3, 3, 3, new Point3D(0, 0, 0));
-        CalcBox myCalcBox2 = new CalcBox(6, 6, 6, new Point3D(-4, 4, 3));
-        CalcBox myCalcBox3 = new CalcBox(8, 8, 8, new Point3D(-10, 2, -0));
-        CalcBox myCalcBox4 = new CalcBox(5, 5, 5, new Point3D(-10, 2, -0));
+        CalcBox myCalcBox1 = new CalcBox(2, 5, 5, new Point3D(0, 0, 0));
+        CalcBox myCalcBox2 = new CalcBox(6, 2, 6, new Point3D(-4, 4, 3));
+        CalcBox myCalcBox3 = new CalcBox(3, 8, 4, new Point3D(-10, 2, -0));
+        CalcBox myCalcBox4 = new CalcBox(2, 5, 5, new Point3D(-10, 2, -0));
         BoxArray myBoxArray = new BoxArray(new CalcBox[]{myCalcBox1, myCalcBox2, myCalcBox3, myCalcBox4});
 
         CalcBox[] best = myBoxArray.findBestBox();
