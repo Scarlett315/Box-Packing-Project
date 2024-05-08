@@ -1,20 +1,20 @@
 package main;
 
 public class CalcBox {
-    private int length;
-    private int width;
-    private int height;
+    private double length;
+    private double width;
+    private double height;
     private Point3D startPoint;
     private Point3D[] pointArr = new Point3D[8];
 
     //constructors
-    public CalcBox(int initL, int initW, int initH, Point3D initS){
+    public CalcBox(double initL, double initW, double initH, Point3D initS){
         length = initL;
         width = initW;
         height = initH;
         startPoint = initS;
 
-        pointArr = calculateBoxPoints(initS, initL, initW, initH);
+        pointArr = this.calculateBoxPoints();
     }
     public CalcBox(){};
 
@@ -23,7 +23,7 @@ public class CalcBox {
         width = box.getWidth();
         height = box.getHeight();
         startPoint = box.getStartPoint();
-        pointArr = calculateBoxPoints(startPoint, length, width, height);
+        pointArr = calculateBoxPoints();
     }
 
     //outputs the point array in a more readable way
@@ -44,16 +44,16 @@ public class CalcBox {
     }
 
 
-    public int calculateVolume(){ //calculates the volume of one box
+    public double calculateVolume(){ //calculates the volume of one box
         return length * width * height;
     }
 
-    public int calculateSA(){ //calculates the SA of one box
+    public double calculateSA(){ //calculates the SA of one box
         return (2 * length * width) +  (2 * length * height) + (2 * width * height);
     }
 
     //Recalculate all points if the box is moved/dimensions changed
-    private Point3D[] calculateBoxPoints(Point3D start, int l, int w, int h){
+    private Point3D[] calculateBoxPoints(){
         //box points
         Point3D Point2;
         Point3D Point3;
@@ -105,7 +105,7 @@ public class CalcBox {
         else if (pointIndex == 7){
             startPoint = new Point3D(targetPoint.getX()-width, targetPoint.getY() - length,targetPoint.getZ() - height);
         }
-        pointArr = calculateBoxPoints(startPoint, length, width, height);
+        pointArr = calculateBoxPoints();
     }
 
     //checks if 2 boxes are equal (length, width, height, startPoint are the same)
@@ -133,13 +133,13 @@ public class CalcBox {
 
 
     //Getters & Setters!
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
-    public int getLength() {
+    public double getLength() {
         return length;
     }
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
     public Point3D getStartPoint() {
@@ -150,20 +150,20 @@ public class CalcBox {
     }
 
     //other things change if lwh or start point changes
-    public void setHeight(int h) {
+    public void setHeight(double h) {
         this.height = h;
-        pointArr = calculateBoxPoints(startPoint, length, width, height); //so points have to be recalculated
+        pointArr = calculateBoxPoints(); //so points have to be recalculated
     }
-    public void setLength(int l) {
+    public void setLength(double l) {
         this.length = l;
-        pointArr = calculateBoxPoints(startPoint, length, width, height);
+        pointArr = calculateBoxPoints();
     }
     public void setStartPoint(Point3D startPt) {
         this.startPoint = startPt;
-        pointArr = calculateBoxPoints(startPoint, length, width, height);
+        pointArr = calculateBoxPoints();
     }
-    public void setWidth(int w) {
+    public void setWidth(double w) {
         this.width = w;
-        pointArr = calculateBoxPoints(startPoint, length, width, height);
+        pointArr = calculateBoxPoints();
     }
 }

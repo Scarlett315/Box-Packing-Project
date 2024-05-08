@@ -13,13 +13,13 @@ public class BoxArray {
 
     //Calculates a bounding box for an array of Boxes
     public CalcBox calcBoundingBox(){
-        int greatestX = Integer.MIN_VALUE;
-        int greatestY = Integer.MIN_VALUE;
-        int greatestZ = Integer.MIN_VALUE;
+        double greatestX = Double.MIN_VALUE;
+        double greatestY = Double.MIN_VALUE;
+        double greatestZ = Double.MIN_VALUE;
 
-        int leastX = Integer.MAX_VALUE;
-        int leastY = Integer.MAX_VALUE;
-        int leastZ = Integer.MAX_VALUE;
+        double leastX = Double.MAX_VALUE;
+        double leastY = Double.MAX_VALUE;
+        double leastZ = Double.MAX_VALUE;
 
 
         //greedy algorithm to find the greatest & least x, y, z of all the boxes
@@ -38,21 +38,21 @@ public class BoxArray {
 
         //length, width, height = difference between greatest and least y, x, z respectively
         Point3D start = new Point3D(leastX, leastY, leastZ); //start point = least x, y, z coordinate (bottom left)
-        int l = greatestY - leastY;
-        int w = greatestX - leastX;
-        int h = greatestZ - leastZ;
+        double l = greatestY - leastY;
+        double w = greatestX - leastX;
+        double h = greatestZ - leastZ;
 
         return new CalcBox(l, w, h, start);
     }
 
     //finds the best bounding box for a specific order of placing down the boxes
     private CalcBox[] findBestPrmtn(){
-        int smallestSA;
+        double smallestSA;
         ArrayList<CalcBox> pastBoxes = new ArrayList<CalcBox>();
         CalcBox bestBox = new CalcBox();
         CalcBox[] finalBoxes = new CalcBox[boxArr.length + 1]; //final array of boxes w/ positions to be returned
 
-        //sort the box list by volume, convert into ArrayList to sort and then back into Array (intuitive but not correct)
+        //sort the box list by volume, convert into ArrayList to sort and then back into Array (intuitive but not necessarily correct)
         /*
         ArrayList<CalcBox> boxArrLi =  new ArrayList<CalcBox>(Arrays.asList(boxArr));
         boxArrLi.sort(Comparator.comparingInt((CalcBox o) -> o.calculateVolume()));
@@ -60,7 +60,6 @@ public class BoxArray {
             boxArr[i] = boxArrLi.get(i);
         }
         */
-
 
         boxArr[0].moveBox(0, new Point3D(0, 0, 0)); //moves first box to origin
         finalBoxes[1] = new CalcBox(boxArr[0]);
@@ -135,7 +134,7 @@ public class BoxArray {
         CalcBox[][] allPermutations = permute.getPermutations(boxArr);
 
         //initial values
-        int smallestSA = Integer.MAX_VALUE;
+        double smallestSA = Integer.MAX_VALUE;
         CalcBox[] finBoxes = new CalcBox[boxArr.length + 1];
 
         for (CalcBox[] permutation:allPermutations){

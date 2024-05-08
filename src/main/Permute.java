@@ -3,7 +3,7 @@ package main;
 import java.util.ArrayList;
 
 public class Permute {
-    private ArrayList<CalcBox[]> allPermutations = new ArrayList<>();
+    private final ArrayList<CalcBox[]> allPermutations = new ArrayList<>();
 
     //recursive function to calculate every order the boxes can be placed
     private void permute(java.util.List<CalcBox> arr, int k){

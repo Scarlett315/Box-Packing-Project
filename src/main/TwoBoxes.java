@@ -1,4 +1,5 @@
 //THIS CLASS IS UNUSED --> used to test logic before making BoxArray
+/*
 package main;
 
 public class TwoBoxes {
@@ -102,4 +103,6 @@ public class TwoBoxes {
         this.b = b;
     }
 }
+*/
+
 
