@@ -23,38 +23,49 @@ public class main extends Application{
         PhongMaterial purple = new PhongMaterial();
         purple.setDiffuseColor(Color.PURPLE);
 
+        PhongMaterial teal = new PhongMaterial();
+        teal.setDiffuseColor(Color.TEAL);
+
         PhongMaterial black = new PhongMaterial();
         black.setDiffuseColor(Color.BLACK);
 
-        PhongMaterial[] colors = new PhongMaterial[]{black, red, blue, green, purple};
+        PhongMaterial[] colors = new PhongMaterial[]{black, red, blue, green, purple, teal};
 
-        //Calculations
-        CalcBox myCalcBox1 = new CalcBox(2, 5, 5, new Point3D(0, 0, 0));
-        CalcBox myCalcBox2 = new CalcBox(6, 2, 6, new Point3D(-4, 4, 3));
-        CalcBox myCalcBox3 = new CalcBox(3, 8, 4, new Point3D(-10, 2, -0));
-        CalcBox myCalcBox4 = new CalcBox(2, 5, 5, new Point3D(-10, 2, -0));
-        BoxArray myBoxArray = new BoxArray(new CalcBox[]{myCalcBox1, myCalcBox2, myCalcBox3, myCalcBox4});
+        //Input boxes here
+        /*
+        CalcBox a = new CalcBox(2, 5, 5, new Point3D(0, 0, 0));
+        CalcBox b = new CalcBox(2, 7, 7, new Point3D(0, 0, 0));
+        CalcBox c = new CalcBox(4, 4, 4, new Point3D(0, 0, 0));
+        CalcBox d = new CalcBox(2, 8, 4, new Point3D(0, 0, 0));
+        CalcBox e = new CalcBox(2, 2, 2, new Point3D(0, 0, 0));
+         */
+
+        //Preset Boxes for fair
+        CalcBox a = new CalcBox(2,  10, 10, new Point3D(0, 0, 0));
+        CalcBox b = new CalcBox(5, 5, 5, new Point3D(0, 0, 0));
+        CalcBox c = new CalcBox(6.5, 6.5, 4, new Point3D(0, 0, 0));
+        CalcBox d = new CalcBox(2.5, 10, 5, new Point3D(0, 0, 0));
+        CalcBox e = new CalcBox(4, 4, 4, new Point3D(0, 0, 0));
+
+        BoxArray myBoxArray = new BoxArray(new CalcBox[]{a, b, c, d, e});
+
+
 
         CalcBox[] best = myBoxArray.findBestBox();
 
-        Box bestBox = new DisplayBox(best[0]).getBox();
-        bestBox.setMaterial(colors[0]);
-        Box a = new DisplayBox(best[1]).getBox();
-        a.setMaterial(colors[1]);
-        Box b = new DisplayBox(best[2]).getBox();
-        b.setMaterial(colors[2]);
-        Box c = new DisplayBox(best[3]).getBox();
-        c.setMaterial(colors[3]);
-        Box d = new DisplayBox(best[4]).getBox();
-        d.setMaterial(colors[4]);
+        //Creating a Group object
+        Group root = new Group();
 
+
+        for (int i = 0; i < best.length; i++){
+            Box display = new DisplayBox(best[i]).getBox();
+            display.setMaterial(colors[i]);
+            root.getChildren().add(display);
+        }
 
         //Lighting
         AmbientLight light = new AmbientLight(Color.WHITE);
-
-
-        //Creating a Group object
-        Group root = new Group(light, bestBox, a, b, c, d);
+        root.getChildren().add(light);
 
         //Creating a scene object
         Scene scene = new Scene(root, 800, 800);
